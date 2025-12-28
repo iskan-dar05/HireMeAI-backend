@@ -20,13 +20,17 @@ router = APIRouter()
 @router.get("/me", response_model=UserOut)
 def me(request: Request, db: Session = Depends(get_db)):
     auth = request.headers.get("Authorization")
-
+    
     if not auth:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated",
+            headers={
+                "Access-Control-Allow-Origin": "https://hire-me-ai-frontend.vercel.app",
+                "Access-Control-Allow-Credentials": "true",
+            }
         )
-
+    
     try:
         token = auth.replace("Bearer ", "")
         user = get_current_user(token, db)
@@ -35,8 +39,11 @@ def me(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=str(e),
+            headers={
+                "Access-Control-Allow-Origin": "https://hire-me-ai-frontend.vercel.app",
+                "Access-Control-Allow-Credentials": "true",
+            }
         )
-
 # =========================
 # REGISTER
 # =========================
@@ -98,17 +105,26 @@ async def login(request: Request, db: Session = Depends(get_db)):
 # REFRESH TOKEN
 # =========================
 @router.post("/refresh")
-def refresh_token(refresh_token: str):
-    user_id = verify_refresh_token(refresh_token)
-    if not user_id:
-        raise HTTPException(status_code=401, detail="Invalid refresh token")
+def refresh_token(request: Request):
+    try:
+        data = await request.json()
+        refresh_token = data.get("refresh_token")
+        
+        if not refresh_token:
+            raise HTTPException(status_code=400, detail="Refresh token required")
+            
+        user_id = verify_refresh_token(refresh_token)
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Invalid refresh token")
 
-    access_token = create_access_token(data={"sub": str(user_id)})
+        access_token = create_access_token(data={"sub": str(user_id)})
 
-    return {
-        "access_token": access_token,
-        "token_type": "bearer",
-    }
+        return {
+            "access_token": access_token,
+            "token_type": "bearer",
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 # =========================

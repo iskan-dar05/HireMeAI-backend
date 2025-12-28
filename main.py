@@ -1,16 +1,15 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
 from app.routes.auth import router as auth_router
 from app.routes.resume import router as resume_router
 from app.routes.template import router as template_router
-from fastapi.responses import Response
 import os
 
-app = FastAPI(title="HireMeAI API")  # Only ONE app declaration
+app = FastAPI(title="HireMeAI API")
 
 path = '/'
-
 if os.path.exists(path) is False:
     os.makedirs(path)
 
@@ -28,20 +27,18 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"],
     expose_headers=["*"],
-    max_age=86400,  # 24 hours in seconds
+    max_age=86400,
 )
 
-# Add a middleware to handle OPTIONS requests BEFORE routing
+# Global exception handler to add CORS headers to all responses
 @app.middleware("http")
-async def handle_options_requests(request: Request, call_next):
+async def add_cors_headers(request: Request, call_next):
+    origin = request.headers.get("origin", "")
+    allowed_origin = origin if origin in origins else origins[0] if origins else "*"
+    
+    # Handle preflight OPTIONS requests
     if request.method == "OPTIONS":
-        # Create a preflight response
-        origin = request.headers.get("origin", "")
-        
-        # Check if origin is allowed
-        allowed_origin = origin if origin in origins else origins[0] if origins else "*"
-        
-        response = Response(
+        return JSONResponse(
             status_code=200,
             headers={
                 "Access-Control-Allow-Origin": allowed_origin,
@@ -49,26 +46,39 @@ async def handle_options_requests(request: Request, call_next):
                 "Access-Control-Allow-Headers": "Authorization, Content-Type, Accept, Origin, X-Requested-With",
                 "Access-Control-Allow-Credentials": "true",
                 "Access-Control-Max-Age": "86400",
-                "Access-Control-Expose-Headers": "*",
             }
         )
-        return response
     
-    # For non-OPTIONS requests, proceed normally
-    response = await call_next(request)
+    try:
+        response = await call_next(request)
+    except HTTPException as exc:
+        # Handle FastAPI HTTPExceptions with CORS headers
+        response = JSONResponse(
+            status_code=exc.status_code,
+            content={"detail": exc.detail},
+            headers={
+                "Access-Control-Allow-Origin": allowed_origin,
+                "Access-Control-Allow-Credentials": "true",
+                **exc.headers,
+            }
+        )
+    except Exception:
+        # Handle other exceptions
+        response = JSONResponse(
+            status_code=500,
+            content={"detail": "Internal server error"},
+            headers={
+                "Access-Control-Allow-Origin": allowed_origin,
+                "Access-Control-Allow-Credentials": "true",
+            }
+        )
     
-    # Add CORS headers to all responses
-    origin = request.headers.get("origin", "")
-    allowed_origin = origin if origin in origins else origins[0] if origins else "*"
-    
+    # Add CORS headers to successful responses
     if "access-control-allow-origin" not in response.headers:
         response.headers["Access-Control-Allow-Origin"] = allowed_origin
         response.headers["Access-Control-Allow-Credentials"] = "true"
     
     return response
-
-# Remove or comment out your existing @app.options("/{path:path}") handler
-# as it might conflict with the middleware above
 
 # Include routes
 app.include_router(auth_router, prefix="/auth", tags=["Auth"])
