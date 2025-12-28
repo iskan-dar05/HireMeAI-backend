@@ -15,36 +15,6 @@ from app.core.redis_client import redis_client
 router = APIRouter()
 
 # =========================
-# GET CURRENT USER
-# =========================
-@router.get("/me", response_model=UserOut)
-def me(request: Request, db: Session = Depends(get_db)):
-    auth = request.headers.get("Authorization")
-    
-    if not auth:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated",
-            headers={
-                "Access-Control-Allow-Origin": "https://hire-me-ai-frontend.vercel.app",
-                "Access-Control-Allow-Credentials": "true",
-            }
-        )
-    
-    try:
-        token = auth.replace("Bearer ", "")
-        user = get_current_user(token, db)
-        return user
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=str(e),
-            headers={
-                "Access-Control-Allow-Origin": "https://hire-me-ai-frontend.vercel.app",
-                "Access-Control-Allow-Credentials": "true",
-            }
-        )
-# =========================
 # REGISTER
 # =========================
 @router.post("/register", response_model=UserOut)
