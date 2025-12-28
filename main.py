@@ -16,7 +16,7 @@ if os.path.exists(path) is False:
 
 
 origins = [
-	"https://hiremeai-backend.onrender.com",
+	"https://hire-me-ai-frontend.vercel.app",
 	"http://127.0.0.1:8080"
 ]
 
