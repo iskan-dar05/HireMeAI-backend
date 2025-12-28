@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from app.routes.auth import router as auth_router
 from app.routes.resume import router as resume_router
 from app.routes.template import router as template_router
+from fastapi.responses import Response
 import os
 
 app = FastAPI(title="HireMeAI API")
@@ -29,6 +30,9 @@ app.add_middleware(
 	allow_headers=["*"]
 )
 
+@app.options("/{path:path}")
+async def options_handler(path: str, request: Request):
+    return Response(status_code=200)
 
 # include auth routes
 app.include_router(auth_router, prefix="/auth", tags=["Auth"])
