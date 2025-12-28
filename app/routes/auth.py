@@ -44,31 +44,22 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
 # LOGIN
 # =========================
 @router.post("/login", response_model=Token)
-async def login(request: Request, db: Session = Depends(get_db)):
-    body = await request.json()
+def login(user_in: UserLogin, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == user_in.email).first()
 
-    email = body.get("email")
-    password = body.get("password")
-
-    if not email or not password:
-        raise HTTPException(status_code=400, detail="Missing credentials")
-
-    user = db.query(User).filter(User.email == email).first()
-    if not user or not verify_password(password, user.hashed_password):
+    if not user or not verify_password(user_in.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
         )
 
-    access_token = create_access_token(data={"sub": str(user.id)})
-    refresh_token = create_refresh_token(user.id)
-
     return {
         "user": user,
-        "access_token": access_token,
-        "refresh_token": refresh_token,
+        "access_token": create_access_token({"sub": str(user.id)}),
+        "refresh_token": create_refresh_token(user.id),
         "token_type": "bearer",
     }
+
 
 
 # =========================
