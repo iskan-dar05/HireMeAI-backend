@@ -14,7 +14,6 @@ from app.core.redis_client import redis_client
 
 router = APIRouter()
 
-
 # =========================
 # GET CURRENT USER
 # =========================
@@ -28,11 +27,15 @@ def me(request: Request, db: Session = Depends(get_db)):
             detail="Not authenticated",
         )
 
-    token = auth.replace("Bearer ", "")
-    user = get_current_user(token, db)
-
-    return user
-
+    try:
+        token = auth.replace("Bearer ", "")
+        user = get_current_user(token, db)
+        return user
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=str(e),
+        )
 
 # =========================
 # REGISTER
