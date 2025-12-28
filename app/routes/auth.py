@@ -1,14 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.schemas.user import UserCreate, UserOut, Token, LogoutRequest
+from app.schemas.user import UserCreate, UserOut, Token, UserLogin, LogoutRequest
+from app.schemas.token import RefreshTokenRequest
 from app.models.user import User
 from app.core.security import (
     hash_password,
     verify_password,
     create_access_token,
     create_refresh_token,
-    get_current_user,
+    verify_refresh_token,
 )
 from app.core.redis_client import redis_client
 
@@ -23,20 +24,17 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    hashed_pw = hash_password(user_in.password)
-
     new_user = User(
         firstname=user_in.firstname,
         lastname=user_in.lastname,
         email=user_in.email,
-        hashed_password=hashed_pw,
+        hashed_password=hash_password(user_in.password),
         is_active=True,
     )
 
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-
     return new_user
 
 
@@ -61,31 +59,20 @@ def login(user_in: UserLogin, db: Session = Depends(get_db)):
     }
 
 
-
 # =========================
-# REFRESH TOKEN
+# REFRESH TOKEN (FIXED)
 # =========================
 @router.post("/refresh")
-def refresh_token(request: Request):
-    try:
-        data = await request.json()
-        refresh_token = data.get("refresh_token")
-        
-        if not refresh_token:
-            raise HTTPException(status_code=400, detail="Refresh token required")
-            
-        user_id = verify_refresh_token(refresh_token)
-        if not user_id:
-            raise HTTPException(status_code=401, detail="Invalid refresh token")
+def refresh_token(data: RefreshTokenRequest):
+    user_id = verify_refresh_token(data.refresh_token)
 
-        access_token = create_access_token(data={"sub": str(user_id)})
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid refresh token")
 
-        return {
-            "access_token": access_token,
-            "token_type": "bearer",
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    return {
+        "access_token": create_access_token({"sub": str(user_id)}),
+        "token_type": "bearer",
+    }
 
 
 # =========================
