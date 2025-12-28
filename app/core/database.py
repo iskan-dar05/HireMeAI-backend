@@ -1,16 +1,21 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-from .config import settings
+import os
 
-DATABASE_URL = (
-    f"postgresql://{settings.DB_USER}:{settings.DB_PASSWORD}"
-    f"@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL is not set")
+
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True
 )
 
-engine = create_engine(DATABASE_URL)
-
 SessionLocal = sessionmaker(
-    autocommit=False, autoflush=False, bind=engine
+    autocommit=False,
+    autoflush=False,
+    bind=engine
 )
 
 Base = declarative_base()
