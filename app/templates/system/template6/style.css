@@ -1,0 +1,207 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+  color: #0f172a;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.resume {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+}
+
+@media print {
+  body {
+    background: white;
+    padding: 0;
+  }
+  .resume {
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 40px;
+}
+
+header h1 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.role {
+  font-size: 18px;
+  opacity: 0.9;
+  margin-bottom: 20px;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-item .label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.7;
+}
+
+.contact-item .value {
+  font-size: 14px;
+}
+
+main {
+  padding: 40px;
+}
+
+section {
+  margin-bottom: 30px;
+}
+
+h2 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #667eea;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+main > section > p {
+  font-size: 14px;
+  color: #475569;
+}
+
+.exp-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-left: 4px solid #667eea;
+}
+
+.exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.exp-header h3 {
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.exp-header .company {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.badge {
+  background: #667eea;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.exp-card ul {
+  margin-left: 18px;
+  margin-bottom: 12px;
+}
+
+.exp-card li {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 4px;
+}
+
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tech-stack span {
+  background: #e0e7ff;
+  color: #4338ca;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.edu-card h3 {
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.edu-card p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.edu-card .year {
+  color: #94a3b8;
+}
+
+.skills-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.skill-tag.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+@media print {
+  header {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .badge, .skill-tag.primary {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

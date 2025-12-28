@@ -1,0 +1,235 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Garamond', 'Georgia', serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #2c2c2c;
+}
+
+.resume {
+  max-width: 850px;
+  margin: 20px auto;
+  background: #faf9f7;
+  box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+}
+
+@media print {
+  body {
+    background: white;
+  }
+  .resume {
+    margin: 0;
+    box-shadow: none;
+    background: white;
+  }
+}
+
+header {
+  text-align: center;
+  padding: 50px 50px 30px;
+  background: #1a1a1a;
+  color: white;
+}
+
+header h1 {
+  font-size: 38px;
+  font-weight: normal;
+  letter-spacing: 8px;
+  margin-bottom: 15px;
+}
+
+.title-bar {
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: #c9a227;
+  border-top: 1px solid #444;
+  border-bottom: 1px solid #444;
+  padding: 10px 30px;
+  display: inline-block;
+}
+
+.contact-bar {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.contact-bar .sep {
+  margin: 0 12px;
+  color: #c9a227;
+  font-size: 8px;
+}
+
+section {
+  padding: 25px 50px;
+}
+
+h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #1a1a1a;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #c9a227;
+}
+
+.executive-summary p {
+  font-size: 15px;
+  color: #444;
+  text-align: justify;
+  line-height: 1.8;
+}
+
+.key-achievements {
+  background: #1a1a1a;
+  color: white;
+}
+
+.key-achievements h2 {
+  color: white;
+  border-bottom-color: #c9a227;
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  text-align: center;
+}
+
+.achievement .number {
+  display: block;
+  font-size: 32px;
+  color: #c9a227;
+  font-weight: normal;
+  line-height: 1.2;
+}
+
+.achievement .label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #888;
+}
+
+.exec-role {
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.exec-role:last-child {
+  border-bottom: none;
+}
+
+.role-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.role-info h3 {
+  font-size: 17px;
+  color: #1a1a1a;
+  font-weight: normal;
+}
+
+.role-info .company {
+  font-size: 14px;
+  color: #c9a227;
+}
+
+.role-meta {
+  text-align: right;
+  font-size: 12px;
+  color: #777;
+}
+
+.role-meta span {
+  display: block;
+}
+
+.role-desc {
+  font-size: 14px;
+  color: #555;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.exec-role ul {
+  margin-left: 20px;
+}
+
+.exec-role li {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+.bottom-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 3px solid #1a1a1a;
+}
+
+.bottom-sections section {
+  padding: 25px 30px;
+}
+
+.bottom-sections section:first-child {
+  border-right: 1px solid #ddd;
+}
+
+.edu-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.edu-item strong {
+  font-weight: normal;
+  color: #333;
+}
+
+.edu-item span {
+  color: #777;
+}
+
+.board-list {
+  list-style: none;
+}
+
+.board-list li {
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 6px;
+  padding-left: 15px;
+  position: relative;
+}
+
+.board-list li::before {
+  content: "◆";
+  position: absolute;
+  left: 0;
+  color: #c9a227;
+  font-size: 8px;
+  top: 4px;
+}
+
+@media print {
+  header, .key-achievements {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

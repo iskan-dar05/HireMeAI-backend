@@ -1,0 +1,168 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  line-height: 1.7;
+  color: #2d2d2d;
+  background: #f0f0f0;
+}
+
+.resume {
+  max-width: 800px;
+  margin: 20px auto;
+  background: white;
+  padding: 50px 60px;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+@media print {
+  body {
+    background: white;
+  }
+  .resume {
+    margin: 0;
+    padding: 30px 50px;
+    box-shadow: none;
+  }
+}
+
+.header {
+  text-align: center;
+  padding-bottom: 25px;
+  border-bottom: 2px solid #2d2d2d;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 36px;
+  font-weight: normal;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.header .title {
+  font-size: 16px;
+  color: #666;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.contact-line {
+  font-size: 13px;
+  color: #555;
+}
+
+.contact-line .divider {
+  margin: 0 10px;
+  color: #999;
+}
+
+section {
+  margin-bottom: 28px;
+}
+
+h2 {
+  font-size: 14px;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #2d2d2d;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.profile-text {
+  font-size: 14px;
+  color: #444;
+  text-align: justify;
+}
+
+.experience-item {
+  margin-bottom: 22px;
+}
+
+.exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.exp-header h3 {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.company-name {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+.date {
+  font-size: 13px;
+  color: #888;
+}
+
+ul {
+  margin-left: 20px;
+}
+
+li {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+.education-item {
+  margin-bottom: 15px;
+}
+
+.edu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.edu-header h3 {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.school-name {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+}
+
+.two-column {
+  display: flex;
+  gap: 40px;
+}
+
+.column {
+  flex: 1;
+}
+
+.competencies {
+  list-style: none;
+  margin-left: 0;
+}
+
+.competencies li {
+  padding-left: 15px;
+  position: relative;
+}
+
+.competencies li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #888;
+}

@@ -1,0 +1,126 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: #111;
+  background: #f8f8f8;
+  font-size: 14px;
+}
+
+.resume {
+  max-width: 750px;
+  margin: 30px auto;
+  background: white;
+  padding: 60px;
+}
+
+@media print {
+  body {
+    background: white;
+  }
+  .resume {
+    margin: 0;
+    padding: 40px;
+  }
+}
+
+body > .resume > header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+body > .resume > header h1 {
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.contact-info {
+  color: #666;
+  font-size: 13px;
+}
+
+.contact-info span {
+  margin: 0 5px;
+}
+
+section {
+  margin-bottom: 35px;
+}
+
+h2 {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #111;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #111;
+}
+
+article {
+  margin-bottom: 25px;
+}
+
+article:last-child {
+  margin-bottom: 0;
+}
+
+article > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.role-info h3 {
+  font-size: 15px;
+  font-weight: 600;
+  display: inline;
+}
+
+.role-info .company {
+  font-weight: 400;
+  color: #555;
+}
+
+.role-info .company::before {
+  content: " — ";
+}
+
+time {
+  font-size: 13px;
+  color: #888;
+}
+
+article ul {
+  margin-left: 0;
+  list-style: none;
+}
+
+article li {
+  color: #444;
+  margin-bottom: 4px;
+  padding-left: 15px;
+  position: relative;
+}
+
+article li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: #ccc;
+}
+
+.skills-section p {
+  color: #444;
+  line-height: 1.8;
+}
