@@ -16,7 +16,7 @@ if os.path.exists(path) is False:
 
 
 origins = [
-	"http://localhost:8080",
+	"https://hiremeai-backend.onrender.com",
 	"http://127.0.0.1:8080"
 ]
 
