@@ -1,57 +1,47 @@
-from logging.config import fileConfig
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-from alembic import context
 import sys
 import os
+from logging.config import fileConfig
+from sqlalchemy import engine_from_config, pool
+from alembic import context
+from dotenv import load_dotenv
 
-
-# add backend folder to path
+# load .env
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
 
-from app.core.database import engine, Base
-from app.models import user
-from app.models import template
+# import your Base and models
+from app.core.database import Base
+from app.models import user, template  # import ALL your models here
 
-
-
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
+# Alembic config
 config = context.config
-
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
+# THIS IS THE KEY: Alembic needs your metadata
 target_metadata = Base.metadata
 
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
-
+# database url
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL is not set")
 
 def run_migrations_offline():
     context.configure(
-        url=str(engine.url),
+        url=DATABASE_URL,
         target_metadata=target_metadata,
         literal_binds=True,
-        dialect_opts={"paramstyle": "named"},
     )
-
     with context.begin_transaction():
         context.run_migrations()
 
 
 def run_migrations_online():
-    with engine.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+    from sqlalchemy import create_engine
+    connectable = create_engine(DATABASE_URL, poolclass=pool.NullPool)
 
+    with connectable.connect() as connection:
+        context.configure(connection=connection, target_metadata=target_metadata)
         with context.begin_transaction():
             context.run_migrations()
 
