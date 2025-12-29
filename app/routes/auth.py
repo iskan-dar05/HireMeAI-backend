@@ -12,6 +12,12 @@ from app.core.security import get_current_user
 router = APIRouter()
 
 
+@router.get("/me")
+def me(current_user: User = Depends(get_current_user)):
+	return current_user
+
+
+
 @router.post("/register", response_model=UserOut)
 def register(user_in: UserCreate, db: Session = Depends(get_db)):
 	# Check if user exists
