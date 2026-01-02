@@ -2,8 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile, File
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from app.schemas.resume_schemas import ResumeCreate
-from services.create_resume import generate_resume
+from app.schemas.resume_schemas import ResumeRequest, SummaryRequest
+from services.generate_resume import generate_resume as generate_resume_service
+from services.generate_summary import generate_summary as generate_summary_service
 from app.models.user import User
 from app.models.template import Template
 from app.utils.thumbnail_generator import generate_pdf_thumbnail
@@ -11,7 +12,7 @@ import tempfile
 from app.core.security import get_current_user
 from app.core.database import get_db
 import time
-from typing import Optional
+from typing import Optional, List
 import os
 
 from pathlib import Path
@@ -19,10 +20,13 @@ from pathlib import Path
 
 router = APIRouter()
 
-@router.post("/create-resume")
-async def create_resume(
+
+# Generate Resume
+
+@router.post("/generate-resume")
+async def generate_resume(
     request: Request,
-    data: ResumeCreate,
+    data: ResumeRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
     ):
@@ -31,7 +35,7 @@ async def create_resume(
 
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
-    relative_pdf_path, pdf_dir = generate_resume(
+    relative_pdf_path, pdf_dir = generate_resume_service(
         job_description= data.job_description or "",
         user_data=data.dict(),
         template_path=template.folder_path.lstrip("/"),
@@ -53,6 +57,9 @@ async def create_resume(
         "file": relative_pdf_path,
     }
 
+
+
+# Serve Resume
 
 @router.get("/view-resume/{pdf_path:path}")
 def serve_resume(
@@ -90,6 +97,9 @@ def serve_resume(
     )
 
 
+
+# Dashboard
+
 @router.get('/dashboard')
 def dashboard(request: Request, 
                 current_user: User = Depends(get_current_user),
@@ -124,8 +134,19 @@ def dashboard(request: Request,
             "total_downloads": total_downloads
     }
 
+# Generate Summary
 
+@router.post("/generate-summary")
+def generate_summary(data: SummaryRequest):
 
+    data = {
+        "experiences": data.experiences,
+        "skills": data.skills,
+    }
+    
+    summary_text = generate_summary_service(data)
+
+    return { "summary": summary_text }
 
 
 

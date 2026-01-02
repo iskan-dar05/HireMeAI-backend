@@ -17,7 +17,7 @@ class Education(BaseModel):
 
 
 
-class ResumeCreate(BaseModel):
+class ResumeRequest(BaseModel):
     fullname: Optional[str]
     email: Optional[str]
     phone: Optional[str]
@@ -32,3 +32,6 @@ class ResumeCreate(BaseModel):
     education: List[Education]
 
 
+class SummaryRequest(BaseModel):
+    experiences: List[Experience]
+    skills: Optional[List[str]] = []
