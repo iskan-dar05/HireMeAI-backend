@@ -7,10 +7,12 @@ from weasyprint import HTML
 
 load_dotenv()
 
-BASE_DIR = Path(__file__).resolve().parents[2]
+BASE_DIR = Path(__file__).resolve().parents[1]
 
-BASE_TEMPLATES = BASE_DIR / "app" / "app" / "templates"
-USER_TEMPLATES = BASE_DIR / "app" / "app" / "templates" / "user"
+
+BASE_TEMPLATES = BASE_DIR /"app" / "templates"
+USER_TEMPLATES = BASE_DIR / "app" / "templates" / "user"
+
 
 
 def generate_resume(
@@ -20,6 +22,9 @@ def generate_resume(
     user_data: dict,
     template_path: str,
 ) -> str:
+    print("BASEDIR++======", BASE_DIR)
+    print("BASE_TEMPLATES===========", BASE_TEMPLATES)
+
     with open(str(BASE_TEMPLATES / template_path / "index.html"), "r") as f:
         template_html = f.read()
 
@@ -77,6 +82,7 @@ No explanations.
     # 5️⃣ Save PDF
     pdf_name = f"resume_{int(time.time())}.pdf"
     pdf_path = pdf_dir / pdf_name
+    relative_pdf_path = os.path.relpath(pdf_path, start=BASE_TEMPLATES)
 
     HTML(
         string=final_html,
@@ -84,6 +90,6 @@ No explanations.
     ).write_pdf(pdf_path)
 
     return (
-        str(pdf_path),
+        relative_pdf_path,
         str(pdf_dir)
         )

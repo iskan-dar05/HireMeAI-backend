@@ -31,26 +31,26 @@ async def create_resume(
 
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
-    pdf_path, pdf_dir = generate_resume(
+    relative_pdf_path, pdf_dir = generate_resume(
         job_description= data.job_description or "",
         user_data=data.dict(),
-        template_path=template.folder_path,
+        template_path=template.folder_path.lstrip("/"),
         user_id=current_user.id,
     )
 
     thumbnail_path = generate_pdf_thumbnail(
-        pdf_path=pdf_path,
+        pdf_path=relative_pdf_path,
         output_dir=pdf_dir
     )
 
-    template = Template(name=f"{current_user.firstname} {int(time.time())}", description="description", folder_path=pdf_path, thumbnail_url=thumbnail_path, downloads=0, is_system=False, user_id=current_user.id)
+    template = Template(name=f"{current_user.firstname} {int(time.time())}", description="description", folder_path=relative_pdf_path, thumbnail_url=thumbnail_path, downloads=0, is_system=False, user_id=current_user.id)
     db.add(template)
     db.commit()
     db.refresh(template)
 
     return {
         "message": "Resume created successfully",
-        "file": pdf_path,
+        "file": relative_pdf_path,
     }
 
 
@@ -61,7 +61,11 @@ def serve_resume(
         db: Session = Depends(get_db)
     ):
 
-    file_path = Path(__file__).resolve().parents[2] / pdf_path
+    BASE_TEMPLATES = Path(__file__).resolve().parents[2] / "app" / "templates"
+
+    file_path = BASE_TEMPLATES / pdf_path
+
+    print("FILE PATH ========== ", file_path)
 
     if not file_path.exists():
         raise HTTPException(status_code=404, detail="File Not Found")
@@ -91,32 +95,33 @@ def dashboard(request: Request,
                 current_user: User = Depends(get_current_user),
                 db: Session = Depends(get_db)
                 ):
+
     templates = current_user.templates
 
     total_downloads = (
-        db.query(func.coalesce(func.sum(Template.downloads), 0))
-            .filter(Template.user_id == current_user.id)
-            .scalar()
+            db.query(func.coalesce(func.sum(Template.downloads), 0))
+                .filter(Template.user_id == current_user.id)
+                .scalar()
     )
 
     templates_data = [
-        {
-            "id": template.id,
-            "name": template.name,
-            "description": template.description,
-            "path": template.folder_path,
-            "thumbnail": template.thumbnail_url,
-            "downloads": template.downloads
-        }
-        for template in templates
+            {
+                "id": template.id,
+                "name": template.name,
+                "description": template.description,
+                "path": template.folder_path,
+                "thumbnail": template.thumbnail_url,
+                "downloads": template.downloads
+            }
+            for template in templates
     ]
 
 
 
     return {
-        "templates": templates_data,
-        "total_templates": len(templates_data),
-        "total_downloads": total_downloads
+            "templates": templates_data,
+            "total_templates": len(templates_data),
+            "total_downloads": total_downloads
     }
 
 

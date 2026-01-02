@@ -2,7 +2,7 @@
 FROM python:3.10
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /
 
 # Copy requirements first (to leverage Docker cache)
 COPY requirements.txt .

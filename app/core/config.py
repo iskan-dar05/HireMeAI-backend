@@ -10,12 +10,7 @@ class Settings(BaseSettings):
 	ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
 	REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
 
-	# Database
-	DB_HOST: str
-	DB_PORT: int
-	DB_USER: str
-	DB_PASSWORD: str
-	DB_NAME: str
+	DATABASE_URL: str
 
 	# Email Config
 	EMAIL_HOST: str
