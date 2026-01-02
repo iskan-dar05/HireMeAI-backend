@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile, File
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from app.schemas.ai import ResumeCreate
+from app.schemas.resume_schemas import ResumeCreate
 from services.create_resume import generate_resume
 from app.models.user import User
 from app.models.template import Template

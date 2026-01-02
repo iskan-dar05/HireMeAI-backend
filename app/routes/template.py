@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.schemas.template import TemplateOut
+from app.schemas.template_schemas import TemplateOut
 from app.models.template import Template
 from app.models.user import User
 from app.core.security import get_current_user
