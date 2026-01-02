@@ -5,7 +5,6 @@ from app.core.config import settings
 
 
 # Load environment variables from .env
-load_dotenv()  
 
 DATABASE_URL = settings.DATABASE_URL
 
